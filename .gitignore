@@ -1,0 +1,4 @@
+node_modules
+img/trainingData/*
+collected_data
+.idea
