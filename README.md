@@ -1,3 +1,3 @@
 ## Boats scraper
 
-* Run scraper using `npm run scraper` command.
+* Run scraper using `npm run scraper` command. 
