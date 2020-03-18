@@ -1,9 +1,9 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require('puppeteer')
 
 class Browser {
-	async init() {
-		return await puppeteer.launch({headless: false});
-	}
+  async init () {
+    return puppeteer.launch({ headless: true })
+  }
 }
 
-module.exports = Browser;
+module.exports = Browser

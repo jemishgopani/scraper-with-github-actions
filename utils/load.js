@@ -1,22 +1,22 @@
-const Ora = require('ora');
+const Ora = require('ora')
 
-class Loader{
-    constructor() {
-        this.loader = Ora().start();
-    }
+class Loader {
+  constructor () {
+    this.loader = Ora().start()
+  }
 
-    success(message){
-      this.loader.succeed(message);
-    }
+  success (message) {
+    this.loader.succeed(message)
+  }
 
-    fail(message){
-        this.loader.fail(message);
-    }
+  fail (message) {
+    this.loader.fail(message)
+  }
 
-    console(message){
-        this.loader.color = 'green';
-        this.loader.text = message;
-    }
+  console (message) {
+    this.loader.color = 'green'
+    this.loader.text = message
+  }
 }
 
-module.exports = new Loader();
+module.exports = new Loader()
