@@ -13,10 +13,13 @@
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
+    "gmail-send": "^1.8.10",
+    "googleapis": "^39.2.0",
     "jimp": "^0.9.5",
     "node-open-geocoder": "^4.0.1",
     "puppeteer": "^2.1.1",
-    "tesseract.js": "^2.0.2"
+    "tesseract.js": "^2.0.2",
+    "zip-a-folder": "0.0.12"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
