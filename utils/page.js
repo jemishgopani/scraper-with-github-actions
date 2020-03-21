@@ -17,6 +17,7 @@ class Page {
   async newPage () {
     const page = await this.browser.newPage()
     await page.setViewport({ width: 1920, height: 1080 })
+    await page.setDefaultNavigationTimeout(0);
     return page
   }
 }
