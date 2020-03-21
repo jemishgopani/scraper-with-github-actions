@@ -94,7 +94,7 @@ const BoatsOnline = {
         if (data.ads >= 20) {
           await BoatsOnline.page.goto(website)
           let pageContext = await BoatsOnline.page.evaluate(() => document.body.innerText)
-          email = await pageContext.match(emailPattern)
+          email = await pageContext.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi)
           if (email == null) {
             let contact = await BoatsOnline.page.$$('a[href*=contact]')
             if (contact[0] !== undefined) {
@@ -103,7 +103,7 @@ const BoatsOnline = {
               await BoatsOnline.page.waitForSelector('body')
               pageContext = await BoatsOnline.page.$('body')
               email = await pageContext.evaluate(el => {
-                const mail = el.innerText.match(emailPattern)
+                const mail = el.innerText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi)
                 return mail
               })
             }
