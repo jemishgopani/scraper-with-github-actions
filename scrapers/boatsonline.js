@@ -35,7 +35,7 @@ const BoatsOnline = {
     await BoatsOnline.parseResults()
 
     // Removing duplicate emails
-    await BoatsOnline.removeDuplicates()
+//    await BoatsOnline.removeDuplicates()
 
     // Build CSV and JSON outputs
     await BoatsOnline.buildJsonOutput(BoatsOnline.finalResult, jsonResultFile)
@@ -124,7 +124,7 @@ const BoatsOnline = {
     await loader.success('Dealer information such as name, email, phone, fax, website and address collected.')
   },
 
-  removeDuplicates: async (array) => {
+  removeDuplicates: async () => {
     for (let index = 0; index < BoatsOnline.finalResult.length; index++) {
       const x = {}
       for (const email of BoatsOnline.finalResult[index].email) {
