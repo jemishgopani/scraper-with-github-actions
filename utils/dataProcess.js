@@ -3,6 +3,7 @@ const jimp = require('jimp')
 const tesseract = require('tesseract.js')
 const axios = require('axios')
 const loader = require('../utils/load')
+const path = require('path')
 
 const DataProcess = {
   data: null,
@@ -21,7 +22,7 @@ const DataProcess = {
     for (const link of DataProcess.data) {
       const timestamp = new Date().getTime()
       const emailImageLink = link.email
-      const emailTrainingImagePath = `${DataProcess.trainingDataPath}/${timestamp}.png`
+      const emailTrainingImagePath = path.resolve(__dirname, `../${DataProcess.trainingDataPath}`, `${timestamp}.png`)
       await axios({
         url: emailImageLink,
         responseType: 'stream'

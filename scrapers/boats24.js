@@ -20,6 +20,7 @@ const Boats24 = {
   // This method for trigger "Boats24" scraper.
   start: async () => {
     // Custom console outputs.
+    console.log('--------------------------------- Boats24 --------------------------------------')
     loader.console('Process has been started.')
 
     // Create a new browser window.
@@ -138,7 +139,7 @@ const Boats24 = {
   },
 
   buildJsonOutput: async (data, resultFile) => {
-    await fs.writeFile(resultFile, JSON.stringify(data))
+    await fs.writeFile(resultFile, JSON.stringify(data, null, 4))
   },
 
   buildCsvOutput: async (data, resultFile) => {
