@@ -2,12 +2,7 @@ const fs = require('fs')
 const readline = require('readline')
 const { google } = require('googleapis')
 const zipFolder = require('zip-a-folder')
-const send = require('gmail-send')({
-  user: 'harshkukadiya4@gmail.com',
-  pass: '8866714523',
-  to: 'jemishgopani2@gmail.com',
-  subject: 'Boats Data Collection - Github'
-})
+
 const GoogleDrive = {
   SCOPES: ['https://www.googleapis.com/auth/drive'],
   TOKEN_PATH: 'token.json',
