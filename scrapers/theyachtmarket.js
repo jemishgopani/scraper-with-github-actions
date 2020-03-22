@@ -156,6 +156,7 @@ const TheYachtMarket = {
                 if(TheYachtMarket.finalResult[index].ads > 20 && TheYachtMarket.finalResult[index].website !== null){
                     await TheYachtMarket.page.goto(TheYachtMarket.finalResult[index].website)
                     let pageContext = await TheYachtMarket.page.evaluate(() => document.body.innerText)
+                    await TheYachtMarket.page.waitForSelector('body')
                     let email = await pageContext.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi)
                     if (email == null) {
                         let contact = await TheYachtMarket.page.$$('a[href*=contact]')
@@ -171,6 +172,7 @@ const TheYachtMarket = {
                             TheYachtMarket.finalResult[index].email = email
                         }
                     }
+                    TheYachtMarket.finalResult[index].email = email
                 }
             }catch(e){
                 console.log(e)
