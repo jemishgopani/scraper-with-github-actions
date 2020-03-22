@@ -13,7 +13,9 @@ const locators = {
         },
         REVEAL_MOBILE_NUMBER_BUTTON: '#brokerPhoneNumber',
         MOBILE_NUMBER_TEXT: 'span#spnPhoneNumber',
-        WEBSITE_LINK: 'a[original-title="Go to website"]'
+        WEBSITE_LINK: 'a[original-title="Go to website"]',
+        DEALER_ADS_COUNT_TEXT: './/small[contains(text(), "boats found)")]',
+        BOATS_FROM_BROKER_BUTTON: '#ContentPlaceHolder1_ContentPlaceHolder1_ContactDetails1_hlViewBrokerBoatsLink'
     }
 }
 

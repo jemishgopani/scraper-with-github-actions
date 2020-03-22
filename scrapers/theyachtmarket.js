@@ -101,7 +101,7 @@ const TheYachtMarket = {
                         await TheYachtMarket.page.waitFor(500)
                     }
                     let dealerAddress = await TheYachtMarket.page.$(locators.DEALER.ADDRESS.ADDRESS_TEXT)
-                    dealerAddress = await dealerAddress.evaluate(el => el.innerText)
+                    if(dealerAddress !== null) dealerAddress = await dealerAddress.evaluate(el => el.innerText)
                     let dealerMobileNumber = await TheYachtMarket.page.$(locators.DEALER.MOBILE_NUMBER_TEXT)
                     dealerMobileNumber = await dealerMobileNumber.evaluate(el => el.innerText)
                     let dealerWebsite = await TheYachtMarket.page.$(locators.DEALER.WEBSITE_LINK)
@@ -114,6 +114,17 @@ const TheYachtMarket = {
                     if (postalCode !== null) postalCode = await postalCode.evaluate(el => el.innerText)
                     let country = await TheYachtMarket.page.$(locators.DEALER.ADDRESS.COUNTRY_NAME_TEXT)
                     if (country !== null) country = await country.evaluate(el => el.innerText)
+                    let boatsFromThisBrokerLink = await TheYachtMarket.page.$(locators.DEALER.BOATS_FROM_BROKER_BUTTON)
+                    let adsCount = 0
+                    if(boatsFromThisBrokerLink !== null) {
+                        boatsFromThisBrokerLink = await boatsFromThisBrokerLink.evaluate(el => el.href)
+                        await TheYachtMarket.page.goto(boatsFromThisBrokerLink)
+                        adsCount = await TheYachtMarket.page.$x(locators.DEALER.DEALER_ADS_COUNT_TEXT)
+                        if (adsCount !== null) adsCount = await TheYachtMarket.page.evaluate(el => {
+                            const text = (el !== undefined) ? el.textContent : ''
+                            return (text !== '') ? text.substring(text.lastIndexOf('(') + 1, text.lastIndexOf('boats')).replace(/\s/, '') : ''
+                        }, adsCount[0])
+                    }
                     TheYachtMarket.finalResult.push({
                         name: dealers.name,
                         address: {
@@ -121,7 +132,8 @@ const TheYachtMarket = {
                             street: street,
                             region: region,
                             postalCode: postalCode,
-                            country: country
+                            country: country,
+                            ads: adsCount
                         },
                         phone: dealerMobileNumber,
                         website: dealerWebsite
@@ -129,7 +141,7 @@ const TheYachtMarket = {
                 }
             }
         }catch (e) {
-            console.log(e.message)
+            console.log(e)
         }
     },
 
