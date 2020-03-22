@@ -33,7 +33,10 @@ const TheYachtMarket = {
 
         // Getting boat dealer results.
         await TheYachtMarket.parseResults()
-        //
+
+        // get emails form dealer's websites
+        await TheYachtMarket.getEmailsFromWebsite()
+
         // Build CSV and JSON outputs
         await TheYachtMarket.buildJsonOutput(TheYachtMarket.finalResult, jsonResultFile)
         console.log(TheYachtMarket.finalResult.length+"Saved")
@@ -103,7 +106,7 @@ const TheYachtMarket = {
                     let dealerAddress = await TheYachtMarket.page.$(locators.DEALER.ADDRESS.ADDRESS_TEXT)
                     if(dealerAddress !== null) dealerAddress = await dealerAddress.evaluate(el => el.innerText)
                     let dealerMobileNumber = await TheYachtMarket.page.$(locators.DEALER.MOBILE_NUMBER_TEXT)
-                    dealerMobileNumber = await dealerMobileNumber.evaluate(el => el.innerText)
+                    if(dealerMobileNumber !== null ) dealerMobileNumber = await dealerMobileNumber.evaluate(el => el.innerText)
                     let dealerWebsite = await TheYachtMarket.page.$(locators.DEALER.WEBSITE_LINK)
                     if (dealerWebsite !== null) dealerWebsite = await dealerWebsite.evaluate(el => el.href)
                     let street = await TheYachtMarket.page.$(locators.DEALER.ADDRESS.STREET_TEXT)
@@ -133,8 +136,9 @@ const TheYachtMarket = {
                             region: region,
                             postalCode: postalCode,
                             country: country,
-                            ads: adsCount
                         },
+                        email:"",
+                        ads: adsCount,
                         phone: dealerMobileNumber,
                         website: dealerWebsite
                     })
@@ -142,6 +146,35 @@ const TheYachtMarket = {
             }
         }catch (e) {
             console.log(e)
+        }
+
+    },
+
+    getEmailsFromWebsite: async () => {
+        for(let index = 0; index < TheYachtMarket.finalResult.length ; index++){
+            try{
+                if(TheYachtMarket.finalResult[index].ads > 20 && TheYachtMarket.finalResult[index].website !== null){
+                    await TheYachtMarket.page.goto(TheYachtMarket.finalResult[index].website)
+                    let pageContext = await TheYachtMarket.page.evaluate(() => document.body.innerText)
+                    let email = await pageContext.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi)
+                    if (email == null) {
+                        let contact = await TheYachtMarket.page.$$('a[href*=contact]')
+                        if (contact[0] !== undefined) {
+                            contact = await contact[0].evaluate(el => el.href)
+                            await TheYachtMarket.page.goto(contact)
+                            await TheYachtMarket.page.waitForSelector('body')
+                            pageContext = await TheYachtMarket.page.$('body')
+                            email = await pageContext.evaluate(el => {
+                                const mail = el.innerText.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi)
+                                return mail
+                            })
+                            TheYachtMarket.finalResult[index].email = email
+                        }
+                    }
+                }
+            }catch(e){
+                console.log(e)
+            }
         }
     },
 
