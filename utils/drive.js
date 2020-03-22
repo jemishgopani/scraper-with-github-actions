@@ -89,12 +89,7 @@ const GoogleDrive = {
               fileId: file.data.id,
               fields: 'webViewLink'
             }).then(response => {
-              send({
-                text: `please visit on this ${response.data.webViewLink}`
-              }, (error, result, fullResult) => {
-                if (error) console.error(error)
-                console.log(result)
-              })
+                console.log(response)
             })
           }
         })

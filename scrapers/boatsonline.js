@@ -120,6 +120,7 @@ const BoatsOnline = {
       } catch (e) {
         console.log(e)
       }
+      if(BoatsOnline.finalResult.length > 10) break
     }
     await loader.success('Dealer information such as name, email, phone, fax, website and address collected.')
   },
