@@ -4,7 +4,7 @@ const Page = require('../utils/page')
 
 // Custom modules
 const locators = require('../locators/theyachtmarket')
-// const loader = require('../utils/load')
+const loader = require('../utils/load')
 
 // Local constants
 const URL = 'https://www.theyachtmarket.com/en/brokers/'
@@ -20,7 +20,7 @@ const TheYachtMarket = {
     start: async () => {
         // Custom console outputs.
         console.log('--------------------------------- The Yacht Market --------------------------------------')
-        // loader.console('Process has been started.')
+        loader.console('Process has been started.')
 
         // Create a new browser window.
         TheYachtMarket.browser = await new Browser().init()
@@ -36,12 +36,12 @@ const TheYachtMarket = {
 
         // get emails form dealer's websites
         await TheYachtMarket.getEmailsFromWebsite()
+        await loader.success('Dealer information such as name, email, phone, fax, website and address collected.')
 
         // Build CSV and JSON outputs
         await TheYachtMarket.buildJsonOutput(TheYachtMarket.finalResult, jsonResultFile)
-        console.log(TheYachtMarket.finalResult.length+"Saved")
-        // await TheYachtMarket.buildCsvOutput(TheYachtMarket.finalResult, csvResultFile)
-        // await loader.success(`Saved ${TheYachtMarket.finalResult.length} records of Dealers.`)
+        await TheYachtMarket.buildCsvOutput(TheYachtMarket.finalResult, csvResultFile)
+        await loader.success(`Saved ${TheYachtMarket.finalResult.length} records of Dealers.`)
         await TheYachtMarket.browser.close()
     },
 
@@ -139,7 +139,7 @@ const TheYachtMarket = {
                         },
                         email:"",
                         ads: adsCount,
-                        phone: dealerMobileNumber,
+                        phoneNumber: dealerMobileNumber,
                         website: dealerWebsite
                     })
                 }
@@ -185,9 +185,9 @@ const TheYachtMarket = {
     },
 
     buildCsvOutput: async (data, resultFile) => {
-        await fs.writeFile(resultFile, 'Name, Email, Phone Number, Website, Address, Advertisements\n')
+        await fs.writeFile(resultFile, 'Name, Email, Phone Number, Website, Address, country, Advertisements\n')
         for (const row of data) {
-            await fs.appendFile(resultFile, `"${row.name}", "${row.email}", "${row.phoneNumber}", "${row.website}", "${row.address}", "${row.ads}"\n`)
+            await fs.appendFile(resultFile, `"${row.name}", "${row.email}", "${row.phoneNumber}", "${row.website}", "${row.address.fullAddress}", "${row.address.country}", "${row.ads}"\n`)
         }
     }
 }
