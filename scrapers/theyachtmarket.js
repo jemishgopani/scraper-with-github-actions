@@ -153,7 +153,7 @@ const TheYachtMarket = {
     getEmailsFromWebsite: async () => {
         for(let index = 0; index < TheYachtMarket.finalResult.length ; index++){
             try{
-                if(TheYachtMarket.finalResult[index].ads > 20 && TheYachtMarket.finalResult[index].website !== null){
+                if(TheYachtMarket.finalResult[index].ads >= 0 && TheYachtMarket.finalResult[index].website !== null){
                     await TheYachtMarket.page.goto(TheYachtMarket.finalResult[index].website)
                     let pageContext = await TheYachtMarket.page.evaluate(() => document.body.innerText)
                     await TheYachtMarket.page.waitForSelector('body')
