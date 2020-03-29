@@ -92,50 +92,54 @@ const TopBoats = {
 
 
             do {
-                flag = false
-                await TopBoats.page.waitForSelector('body')
-                let newBoats = await TopBoats.page.$x(locators.DEALER.NEW_LINK)
-                newBoats = await TopBoats.page.evaluate(el => {
-                    const text = (el !== undefined) ? el.textContent : ''
-                    return (text !== '') ? text.substring(text.lastIndexOf('New (') + 5, text.lastIndexOf(')')).replace(/\s/g, '') : ''
-                }, newBoats[0])
-                let usedBoats = await TopBoats.page.$x(locators.DEALER.USED_BOATS_LINK)
-                usedBoats = await TopBoats.page.evaluate(el => {
-                    const text = (el !== undefined) ? el.textContent : ''
-                    return (text !== '') ? text.substring(text.lastIndexOf('Used boats (') + 12, text.lastIndexOf(')')).replace(/\s/g, '') : ''
-                }, usedBoats[0])
-                let charterBoats = await TopBoats.page.$x(locators.DEALER.CHARTER_LINK)
-                charterBoats = await TopBoats.page.evaluate(el => {
-                    const text = (el !== undefined) ? el.textContent : ''
-                    return (text !== '') ? text.substring(text.lastIndexOf('Charter (') + 9, text.lastIndexOf(')')).replace(/\s/g, '') : ''
-                }, charterBoats[0])
-                let moorings = await TopBoats.page.$x(locators.DEALER.MOORINGS_LINK)
-                moorings = await TopBoats.page.evaluate(el => {
-                    const text = (el !== undefined) ? el.textContent : ''
-                    return (text !== '') ? text.substring(text.lastIndexOf('Moorings (') + 10, text.lastIndexOf(')')).replace(/\s/g, '') : ''
-                }, moorings[0])
-                if(newBoats.length !== 0 || charterBoats.length !== 0 || usedBoats.length !== 0 && moorings.length !== 0){
+                try {
                     flag = false
-                    TopBoats.finalResult.push({
-                        uid: uid,
-                        name: dealer.name,
-                        address: address,
-                        phoneNumber: '',
-                        website: '',
-                        newBoats: Number(newBoats),
-                        usedBoats: Number(usedBoats),
-                        charterBoats: Number(charterBoats),
-                        ads: '',
-                        moorings: Number(moorings)
-                    })
-                }else{
-                    const [allAdsButton] = await TopBoats.page.$x(locators.DEALER.LOOK_AT_ALL_ADS_LINK)
-                    if(allAdsButton != null){
-                        await allAdsButton.click()
-                        flag = true
-                    }else{
+                    await TopBoats.page.waitForSelector('body')
+                    let newBoats = await TopBoats.page.$x(locators.DEALER.NEW_LINK)
+                    newBoats = await TopBoats.page.evaluate(el => {
+                        const text = (el !== undefined) ? el.textContent : ''
+                        return (text !== '') ? text.substring(text.lastIndexOf('New (') + 5, text.lastIndexOf(')')).replace(/\s/g, '') : ''
+                    }, newBoats[0])
+                    let usedBoats = await TopBoats.page.$x(locators.DEALER.USED_BOATS_LINK)
+                    usedBoats = await TopBoats.page.evaluate(el => {
+                        const text = (el !== undefined) ? el.textContent : ''
+                        return (text !== '') ? text.substring(text.lastIndexOf('Used boats (') + 12, text.lastIndexOf(')')).replace(/\s/g, '') : ''
+                    }, usedBoats[0])
+                    let charterBoats = await TopBoats.page.$x(locators.DEALER.CHARTER_LINK)
+                    charterBoats = await TopBoats.page.evaluate(el => {
+                        const text = (el !== undefined) ? el.textContent : ''
+                        return (text !== '') ? text.substring(text.lastIndexOf('Charter (') + 9, text.lastIndexOf(')')).replace(/\s/g, '') : ''
+                    }, charterBoats[0])
+                    let moorings = await TopBoats.page.$x(locators.DEALER.MOORINGS_LINK)
+                    moorings = await TopBoats.page.evaluate(el => {
+                        const text = (el !== undefined) ? el.textContent : ''
+                        return (text !== '') ? text.substring(text.lastIndexOf('Moorings (') + 10, text.lastIndexOf(')')).replace(/\s/g, '') : ''
+                    }, moorings[0])
+                    if (newBoats.length !== 0 || charterBoats.length !== 0 || usedBoats.length !== 0 && moorings.length !== 0) {
                         flag = false
+                        TopBoats.finalResult.push({
+                            uid: uid,
+                            name: dealer.name,
+                            address: address,
+                            phoneNumber: '',
+                            website: '',
+                            newBoats: Number(newBoats),
+                            usedBoats: Number(usedBoats),
+                            charterBoats: Number(charterBoats),
+                            ads: '',
+                            moorings: Number(moorings)
+                        })
+                    } else {
+                        const [allAdsButton] = await TopBoats.page.$x(locators.DEALER.LOOK_AT_ALL_ADS_LINK)
+                        if (allAdsButton != null) {
+                            await allAdsButton.click()
+                            flag = true
+                        } else {
+                            flag = false
+                        }
                     }
+                }catch (e) {
+                    console.log(e.message)
                 }
             }while(flag === true)
         }
