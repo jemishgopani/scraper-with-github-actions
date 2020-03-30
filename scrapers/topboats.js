@@ -72,7 +72,7 @@ const TopBoats = {
             }
            const nextButton = await TopBoats.page.$(locators.DEALER_PAGINATION_NEXT_BUTTON_LINK)
             if(nextButton !== null)  await nextButton.click()
-        }while(dealerLinks.length < totalResults)
+        }while(dealerLinks.length < 20)
         console.log(dealerLinks.length)
         return dealerLinks
     },
@@ -137,7 +137,19 @@ const TopBoats = {
                             flag = true
                         } else {
                             flag = false
-                            console.log('link ---- > '+dealer.link)
+                            TopBoats.finalResult.push({
+                                uid: uid,
+                                name: dealer.name,
+                                address: address,
+                                phoneNumber: '',
+                                website: '',
+                                newBoats: Number(newBoats),
+                                usedBoats: Number(usedBoats),
+                                charterBoats: Number(charterBoats),
+                                ads: '',
+                                moorings: Number(moorings)
+                            })
+                            // console.log('link ---- > '+dealer.link)
                         }
                     }
                 }catch (e) {
@@ -184,7 +196,7 @@ const TopBoats = {
             let phone = phoneResponse.getBody().toString().replace(/\s/g, '')
             let website = websiteResponse.getBody().toString().match(websitePattern)
             TopBoats.finalResult[i].phoneNumber = (phone !== null) ? phone : ''
-            TopBoats.finalResult[i].website = (website[0] !== null) ? website[0] : ''
+            TopBoats.finalResult[i].website = (website !== null) ? website[0] : ''
             let totalBoats = (TopBoats.finalResult[i].newBoats + TopBoats.finalResult[i].charterBoats + TopBoats.finalResult[i].usedBoats)
             TopBoats.finalResult[i].ads = totalBoats
         }
