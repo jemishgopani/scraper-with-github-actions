@@ -74,7 +74,7 @@ const TopBoats = {
             if(nextButton !== null)  await nextButton.click()
         }while(dealerLinks.length < 20)
         console.log(dealerLinks.length)
-        // console.log(dealerLinks)
+        console.log(dealerLinks)
         return dealerLinks
     },
 
