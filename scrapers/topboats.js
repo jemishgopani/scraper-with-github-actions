@@ -72,15 +72,16 @@ const TopBoats = {
             }
            const nextButton = await TopBoats.page.$(locators.DEALER_PAGINATION_NEXT_BUTTON_LINK)
             if(nextButton !== null)  await nextButton.click()
-        }while(dealerLinks.length < 20)
+        }while(dealerLinks.length < totalResults)
         console.log(dealerLinks.length)
-        console.log(dealerLinks)
         return dealerLinks
     },
 
     parseResults: async () => {
+        let counter = 0, page = 0
         const dealers = await TopBoats.parseDealerLinks()
         for(let dealer of dealers){
+            counter++
             await TopBoats.page.goto(dealer.link)
             let flag = false
             let address = await TopBoats.page.$(locators.DEALER.ADDRESS_TEXT)
@@ -115,7 +116,7 @@ const TopBoats = {
                         const text = (el !== undefined) ? el.textContent : ''
                         return (text !== '') ? text.substring(text.lastIndexOf('Moorings (') + 10, text.lastIndexOf(')')).replace(/\s/g, '') : ''
                     }, moorings[0])
-                    if (newBoats.length !== 0 || charterBoats.length !== 0 || usedBoats.length !== 0 && moorings.length !== 0) {
+                    if (newBoats.length !== 0 || charterBoats.length !== 0 || usedBoats.length !== 0 || moorings.length !== 0) {
                         flag = false
                         TopBoats.finalResult.push({
                             uid: uid,
@@ -136,12 +137,26 @@ const TopBoats = {
                             flag = true
                         } else {
                             flag = false
+                            console.log('link ---- > '+dealer.link)
                         }
                     }
                 }catch (e) {
-                    console.log(e.message)
+                    console.log(e)
                 }
             }while(flag === true)
+            if(counter === 20){
+                page++
+                console.log('Page -------->'+page)
+                counter = 0
+                //Close browser
+                await TopBoats.browser.close()
+
+                // Create a new browser window.
+                TopBoats.browser = await new Browser().init()
+
+                // Open "New Tab" on browser.
+                TopBoats.page = await new Page().init(TopBoats.browser)
+            }
         }
     },
 
@@ -151,6 +166,7 @@ const TopBoats = {
 
     findPhoneAndWebsite: async () => {
         const websitePattern = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g
+        console.log(TopBoats.finalResult.length)
         for(let i = 0; i < TopBoats.finalResult.length; i++) {
             const phoneResponse = request('POST', 'https://uk.topboats.com/muestraOcultosEmpresa', {
                 headers: {
@@ -167,8 +183,8 @@ const TopBoats = {
 
             let phone = phoneResponse.getBody().toString().replace(/\s/g, '')
             let website = websiteResponse.getBody().toString().match(websitePattern)
-            TopBoats.finalResult[i].phoneNumber = phone
-            TopBoats.finalResult[i].website = website[0]
+            TopBoats.finalResult[i].phoneNumber = (phone !== null) ? phone : ''
+            TopBoats.finalResult[i].website = (website[0] !== null) ? website[0] : ''
             let totalBoats = (TopBoats.finalResult[i].newBoats + TopBoats.finalResult[i].charterBoats + TopBoats.finalResult[i].usedBoats)
             TopBoats.finalResult[i].ads = totalBoats
         }
