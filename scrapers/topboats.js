@@ -72,7 +72,7 @@ const TopBoats = {
             }
            const nextButton = await TopBoats.page.$(locators.DEALER_PAGINATION_NEXT_BUTTON_LINK)
             if(nextButton !== null)  await nextButton.click()
-        }while(dealerLinks.length <= totalResults)
+        }while(dealerLinks.length < 20)
         console.log(dealerLinks.length)
         // console.log(dealerLinks)
         return dealerLinks
