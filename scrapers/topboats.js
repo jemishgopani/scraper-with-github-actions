@@ -81,6 +81,7 @@ const TopBoats = {
         let counter = 0, page = 0
         const dealers = await TopBoats.parseDealerLinks()
         for(let dealer of dealers){
+            try{
             counter++
             await TopBoats.page.goto(dealer.link)
             let flag = false
@@ -90,7 +91,9 @@ const TopBoats = {
             let uid = await TopBoats.page.$(locators.DEALER.UID)
             if(uid !== null) uid = await uid.evaluate(el => el.value)
 
-
+             }catch (e) {
+                    console.log(e)
+                }
 
             do {
                 try {
